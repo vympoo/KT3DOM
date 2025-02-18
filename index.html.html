@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    const catalogData = [
+    {
+        name: "Книги",
+        subcategories: [
+            {
+                name: "Отечественные",
+                subcategories: []
+            },
+            {
+                name: "Зарубежные",
+                subcategories: [
+                    { name: "Детективы" },
+                    { name: "Научная фантастика" },
+                    { name: "Исторические" }
+                ]
+            }
+        ]
+    },
+    {
+        name: "DVD",
+        subcategories: [
+            {
+                name: "Отечественные",
+                subcategories: [
+                    { name: "Детективы" },
+                    { name: "Научная фантастика" },
+                    { name: "Исторические" }
+                ]
+            },
+            {
+                name: "Зарубежные",
+                subcategories: []
+            }
+        ]
+    }
+];
+
+function createCatalog(data, parentElement) {
+    const ul = document.createElement("ul");
+    ul.style.listStyleType = "none";
+    ul.style.paddingLeft = "20px";
+
+    data.forEach(item => {
+        const li = document.createElement("li");
+        li.style.margin = "5px 0";
+
+        const span = document.createElement("span");
+        span.className = "category";
+        span.textContent = item.name;
+        span.style.cursor = "pointer";
+        span.style.fontWeight = "bold";
+        span.addEventListener("mouseover", function() {
+            this.style.color = "#007BFF";
+        });
+        span.addEventListener("mouseout", function() {
+            this.style.color = ""; 
+        });
+
+        li.appendChild(span);
+
+        if (item.subcategories && item.subcategories.length > 0) {
+            const subUl = document.createElement("ul");
+            subUl.style.listStyleType = "none";
+            subUl.style.paddingLeft = "20px";
+            subUl.className = "hidden";
+            subUl.style.display = "none";
+
+            createCatalog(item.subcategories, subUl);
+            li.appendChild(subUl);
+
+            span.addEventListener("click", function() {
+                if (subUl.style.display === "none") {
+                    subUl.style.display = "block";
+                } else {
+                    subUl.style.display = "none";
+                }
+            });
+        }
+
+        ul.appendChild(li);
+    });
+    parentElement.appendChild(ul);
+}
+
+function initializeCatalog() {
+    const h1 = document.createElement("h1");
+    h1.textContent = "Каталог товаров";
+    document.body.appendChild(h1);
+
+    const catalogElement = document.createElement("ul");
+    catalogElement.id = "catalog";
+    document.body.appendChild(catalogElement);
+
+    createCatalog(catalogData, catalogElement);
+}
+
+document.addEventListener("DOMContentLoaded", initializeCatalog);
+</script>
+</html>
